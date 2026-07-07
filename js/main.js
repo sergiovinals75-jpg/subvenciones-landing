@@ -104,64 +104,36 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Auth functions
-const API_URL = window.location.origin + '/api';
-
-async function handleLogin(e) {
+// Auth functions (sin backend, solo localStorage)
+function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
   
-  try {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-    
-    const data = await response.json();
-    
-    if (response.ok) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      closeModal();
-      updateUIForLoggedInUser(data.user);
-      alert('¡Sesión iniciada! Redirigiendo al panel...');
-    } else {
-      showError('loginForm', data.error || 'Error al iniciar sesión');
-    }
-  } catch (error) {
-    showError('loginForm', 'Error de conexión. Intenta de nuevo.');
-  }
+  // Simular login exitoso
+  const user = { email, plan: 'free' };
+  localStorage.setItem('user', JSON.stringify(user));
+  
+  closeModal();
+  updateUIForLoggedInUser(user);
+  alert('¡Sesión iniciada! Redirigiendo al panel...');
+  window.location.href = 'dashboard.html';
 }
 
-async function handleRegister(e) {
+function handleRegister(e) {
   e.preventDefault();
   const email = document.getElementById('registerEmail').value;
   const password = document.getElementById('registerPassword').value;
   const company = document.getElementById('registerCompany').value;
   
-  try {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, company_name: company })
-    });
-    
-    const data = await response.json();
-    
-    if (response.ok) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      closeModal();
-      updateUIForLoggedInUser(data.user);
-      alert('¡Cuenta creada! Redirigiendo al panel...');
-    } else {
-      showError('registerForm', data.error || 'Error al registrar');
-    }
-  } catch (error) {
-    showError('registerForm', 'Error de conexión. Intenta de nuevo.');
-  }
+  // Simular registro exitoso
+  const user = { email, company_name: company, plan: 'free' };
+  localStorage.setItem('user', JSON.stringify(user));
+  
+  closeModal();
+  updateUIForLoggedInUser(user);
+  alert('¡Cuenta creada! Redirigiendo al panel...');
+  window.location.href = 'dashboard.html';
 }
 
 function showError(formId, message) {
@@ -189,10 +161,9 @@ function updateUIForLoggedInUser(user) {
 
 // Check if user is logged in on page load
 document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
   const user = localStorage.getItem('user');
   
-  if (token && user) {
+  if (user) {
     updateUIForLoggedInUser(JSON.parse(user));
   }
 });
