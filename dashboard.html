@@ -7,120 +7,22 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
   <style>
-    .dashboard {
-      padding: 100px 20px 40px;
-      min-height: 100vh;
-      background: var(--light);
-    }
-    .dashboard-header {
-      max-width: 1200px;
-      margin: 0 auto 40px;
-    }
-    .dashboard-header h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-    .dashboard-header p {
-      color: var(--gray);
-    }
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .dashboard-card {
-      background: var(--white);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-    .dashboard-card h2 {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-      color: var(--dark);
-    }
-    .plan-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
+    .dashboard { padding: 100px 20px 40px; min-height: 100vh; background: var(--light); }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+    .dashboard-card { background: var(--white); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+    .dashboard-card h2 { font-size: 1.1rem; margin-bottom: 20px; }
+    .plan-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 16px; }
     .plan-free { background: #E5E7EB; color: #374151; }
-    .plan-basico { background: #DBEAFE; color: #1D4ED8; }
-    .plan-profesional { background: #D1FAE5; color: #059669; }
-    .plan-empresa { background: #FEF3C7; color: #D97706; }
-    .usage-bar {
-      height: 8px;
-      background: var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 8px 0 16px;
-    }
-    .usage-fill {
-      height: 100%;
-      background: var(--primary);
-      border-radius: 4px;
-      transition: width 0.3s;
-    }
-    .usage-text {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
-    .btn-upgrade {
-      display: inline-block;
-      margin-top: 16px;
-    }
-    .welcome-box {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: var(--white);
-      border-radius: 16px;
-      padding: 40px;
-      margin-bottom: 24px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .welcome-box h2 {
-      color: var(--white);
-      margin-bottom: 8px;
-    }
-    .welcome-box p {
-      opacity: 0.9;
-    }
-    .quick-actions {
-      display: flex;
-      gap: 16px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-    }
-    .quick-actions .btn {
-      background: var(--white);
-      color: var(--primary);
-    }
-    .quick-actions .btn:hover {
-      background: var(--light);
-    }
-    .logout-btn {
-      background: none;
-      border: none;
-      color: var(--gray);
-      cursor: pointer;
-      font-size: 0.9rem;
-      text-decoration: underline;
-    }
-    .logout-btn:hover {
-      color: var(--dark);
-    }
+    .welcome-box { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--white); border-radius: 16px; padding: 40px; margin-bottom: 24px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .welcome-box h2 { color: var(--white); margin-bottom: 8px; }
+    .welcome-box p { opacity: 0.9; }
+    .logout-btn { background: none; border: none; color: var(--gray); cursor: pointer; font-size: 0.9rem; text-decoration: underline; }
+    .logout-btn:hover { color: var(--dark); }
+    .feature-placeholder { text-align: center; padding: 40px; color: var(--gray); }
+    .feature-placeholder h3 { margin-bottom: 12px; color: var(--dark); }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="container">
       <a href="index.html" class="logo">Subvenciones<span>AI</span></a>
@@ -134,168 +36,53 @@
     </div>
   </header>
 
-  <!-- Dashboard -->
   <main class="dashboard">
-    <!-- Welcome Box -->
     <div class="welcome-box">
       <h2>Bienvenido, <span id="userName"></span></h2>
-      <p>Estás en el plan <strong id="currentPlanBadge"></strong>. Aquí puedes gestionar tu suscripción y ver tu uso.</p>
-      <div class="quick-actions">
-        <a href="#pricing" class="btn" onclick="showUpgradeModal()">Mejorar plan</a>
-      </div>
+      <p>Estás en el plan <strong>Gratis</strong>. Próximamente podrás buscar subvenciones con nuestro agente IA.</p>
     </div>
 
-    <!-- Dashboard Grid -->
     <div class="dashboard-grid">
-      <!-- Plan Card -->
       <div class="dashboard-card">
         <h2>Mi Plan</h2>
-        <div id="planBadge" class="plan-badge plan-free">Gratis</div>
-        <p id="planDescription" style="color: var(--gray); margin-bottom: 16px;">2 búsquedas, 1 análisis, 0 PDFs por mes</p>
-        <a href="index.html#pricing" class="btn btn-primary btn-upgrade">Ver planes</a>
+        <div class="plan-badge plan-free">Gratis</div>
+        <p style="color: var(--gray); margin-bottom: 16px;">2 búsquedas, 1 análisis, 0 PDFs por mes</p>
+        <a href="index.html#pricing" class="btn btn-primary">Ver planes</a>
       </div>
 
-      <!-- Usage Card -->
       <div class="dashboard-card">
-        <h2>Uso este mes</h2>
-        
-        <div style="margin-bottom: 16px;">
-          <div class="usage-text">
-            <span>Búsquedas</span>
-            <span id="searchesUsed">0</span>
-          </div>
-          <div class="usage-bar">
-            <div class="usage-fill" id="searchesBar" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <div class="usage-text">
-            <span>Análisis</span>
-            <span id="analysesUsed">0</span>
-          </div>
-          <div class="usage-bar">
-            <div class="usage-fill" id="analysesBar" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <div>
-          <div class="usage-text">
-            <span>PDFs</span>
-            <span id="pdfsUsed">0</span>
-          </div>
-          <div class="usage-bar">
-            <div class="usage-fill" id="pdfsBar" style="width: 0%"></div>
-          </div>
+        <h2>Agente de Subvenciones</h2>
+        <div class="feature-placeholder">
+          <h3>Próximamente</h3>
+          <p>El agente IA estará disponible en la versión beta. Estamos trabajando en ello.</p>
         </div>
       </div>
 
-      <!-- Subscription Card -->
       <div class="dashboard-card">
-        <h2>Suscripción</h2>
-        <p id="subscriptionStatus" style="color: var(--gray); margin-bottom: 16px;">No tienes suscripción activa</p>
-        <p id="subscriptionExpiry" style="color: var(--gray); font-size: 0.9rem;"></p>
+        <h2>Soporte</h2>
+        <div class="feature-placeholder">
+          <p>¿Necesitas ayuda? Escríbenos a</p>
+          <a href="mailto:hola@subvencionesai.com" style="color: var(--primary);">hola@subvencionesai.com</a>
+        </div>
       </div>
     </div>
   </main>
 
   <script>
-    const API_URL = window.location.origin + '/api';
-    
-    // Check auth
-    const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
     
-    if (!token || !user) {
+    if (!user) {
       window.location.href = 'index.html';
-    }
-    
-    const userData = JSON.parse(user);
-    
-    // Update UI
-    document.getElementById('userEmail').textContent = userData.email;
-    document.getElementById('userName').textContent = userData.company_name || userData.email.split('@')[0];
-    
-    // Load usage data
-    async function loadUsage() {
-      try {
-        const response = await fetch(`${API_URL}/usage`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          updateUsageUI(data);
-        }
-      } catch (error) {
-        console.error('Error loading usage:', error);
-      }
-    }
-    
-    function updateUsageUI(data) {
-      const limits = {
-        free: { searches: 2, analyses: 1, pdfs: 0 },
-        basico: { searches: 10, analyses: 3, pdfs: 1 },
-        profesional: { searches: 50, analyses: 25, pdfs: 10 },
-        empresa: { searches: 999, analyses: 999, pdfs: 999 }
-      };
-      
-      const planLimits = limits[data.plan] || limits.free;
-      const usage = data.usage;
-      
-      // Update plan badge
-      const planBadge = document.getElementById('planBadge');
-      const currentPlanBadge = document.getElementById('currentPlanBadge');
-      const planDescription = document.getElementById('planDescription');
-      
-      const planNames = {
-        free: 'Gratis',
-        basico: 'Básico',
-        profesional: 'Profesional',
-        empresa: 'Empresa'
-      };
-      
-      planBadge.textContent = planNames[data.plan] || 'Gratis';
-      planBadge.className = `plan-badge plan-${data.plan}`;
-      currentPlanBadge.textContent = planNames[data.plan] || 'Gratis';
-      
-      const descriptions = {
-        free: '2 búsquedas, 1 análisis, 0 PDFs por mes',
-        basico: '10 búsquedas, 3 análisis, 1 PDF por mes',
-        profesional: '50 búsquedas, 25 análisis, 10 PDFs por mes',
-        empresa: 'Todo ilimitado + API access'
-      };
-      
-      planDescription.textContent = descriptions[data.plan] || descriptions.free;
-      
-      // Update usage bars
-      updateBar('searches', usage.searches, planLimits.searches);
-      updateBar('analyses', usage.analyses, planLimits.analyses);
-      updateBar('pdfs', usage.pdfs, planLimits.pdfs);
-    }
-    
-    function updateBar(type, used, limit) {
-      const bar = document.getElementById(`${type}Bar`);
-      const text = document.getElementById(`${type}Used`);
-      
-      const percentage = limit > 0 ? Math.min((used / limit) * 100, 100) : 0;
-      bar.style.width = `${percentage}%`;
-      text.textContent = limit >= 999 ? `${used} / ∞` : `${used} / ${limit}`;
+    } else {
+      const userData = JSON.parse(user);
+      document.getElementById('userEmail').textContent = userData.email;
+      document.getElementById('userName').textContent = userData.company_name || userData.email.split('@')[0];
     }
     
     function logout() {
-      localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = 'index.html';
     }
-    
-    function showUpgradeModal() {
-      // Redirect to pricing
-      window.location.href = 'index.html#pricing';
-    }
-    
-    // Load data
-    loadUsage();
   </script>
 </body>
 </html>
