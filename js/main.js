@@ -56,14 +56,20 @@ window.addEventListener('scroll', () => {
 });
 
 // Modal functions
-const modal = document.getElementById('authModal');
+let modal;
+
+function initModal() {
+  modal = document.getElementById('authModal');
+}
 
 function openModal() {
+  if (!modal) initModal();
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
+  if (!modal) initModal();
   modal.classList.remove('active');
   document.body.style.overflow = '';
   clearForms();
@@ -91,7 +97,8 @@ function clearForms() {
 }
 
 // Close modal on outside click
-modal.addEventListener('click', (e) => {
+document.addEventListener('click', (e) => {
+  if (!modal) initModal();
   if (e.target === modal) {
     closeModal();
   }
@@ -99,6 +106,7 @@ modal.addEventListener('click', (e) => {
 
 // Close modal on Escape key
 document.addEventListener('keydown', (e) => {
+  if (!modal) initModal();
   if (e.key === 'Escape' && modal.classList.contains('active')) {
     closeModal();
   }
