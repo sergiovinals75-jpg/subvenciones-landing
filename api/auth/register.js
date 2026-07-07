@@ -2,9 +2,7 @@
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-// Base de datos en memoria (en producción usar Vercel KV o Postgres)
-const users = new Map();
+const { createUser, getUserByEmail } = require('../lib/kv');
 
 module.exports = async (req, res) => {
   // CORS
@@ -32,7 +30,7 @@ module.exports = async (req, res) => {
     }
     
     // Verificar si el email ya existe
-    const existingUser = Array.from(users.values()).find(u => u.email === email);
+    const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({ error: 'El email ya está registrado' });
     }
@@ -50,7 +48,7 @@ module.exports = async (req, res) => {
       created_at: new Date().toISOString()
     };
     
-    users.set(id, user);
+    await createUser(user);
     
     // Generar token
     const token = jwt.sign(

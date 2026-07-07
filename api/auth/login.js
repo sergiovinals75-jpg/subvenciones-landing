@@ -1,9 +1,7 @@
 // Vercel Serverless Function - Login
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-// Base de datos en memoria (debe coincidir con register.js)
-const users = new Map();
+const { getUserByEmail } = require('../lib/kv');
 
 module.exports = async (req, res) => {
   // CORS
@@ -27,7 +25,7 @@ module.exports = async (req, res) => {
     }
     
     // Buscar usuario
-    const user = Array.from(users.values()).find(u => u.email === email);
+    const user = await getUserByEmail(email);
     if (!user) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }

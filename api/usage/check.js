@@ -1,5 +1,6 @@
 // Vercel Serverless Function - Check Usage
 const jwt = require('jsonwebtoken');
+const { getUsage } = require('../lib/kv');
 
 // Límites por plan
 const PLAN_LIMITS = {
@@ -8,9 +9,6 @@ const PLAN_LIMITS = {
   profesional: { searches: 50, analyses: 25, pdfs: 10 },
   empresa: { searches: -1, analyses: -1, pdfs: -1 }
 };
-
-// Base de datos en memoria
-const usage = new Map();
 
 function getCurrentMonth() {
   const now = new Date();
@@ -46,24 +44,19 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Tipo inválido' });
     }
     
-    // Obtener uso actual
+    // Obtener uso actual desde KV
     const month = getCurrentMonth();
-    const key = `${decoded.userId}-${month}`;
+    const usage = await getUsage(decoded.userId, month);
     
-    if (!usage.has(key)) {
-      usage.set(key, { searches: 0, analyses: 0, pdfs: 0 });
-    }
-    
-    const currentUsage = usage.get(key);
     const limit = PLAN_LIMITS.free[type]; // Por defecto plan free
     
-    const canUse = limit === -1 || currentUsage[type] < limit;
+    const canUse = limit === -1 || usage[type] < limit;
     
     return res.json({
       canUse,
-      current: currentUsage[type],
+      current: usage[type],
       limit: limit === -1 ? 'Ilimitado' : limit,
-      remaining: limit === -1 ? -1 : Math.max(0, limit - currentUsage[type]),
+      remaining: limit === -1 ? -1 : Math.max(0, limit - usage[type]),
       plan: 'free',
       upgradeRequired: !canUse
     });
