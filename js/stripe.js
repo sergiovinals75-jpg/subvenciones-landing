@@ -5,15 +5,16 @@ const API_URL = 'http://localhost:3000/api';
 
 // Inicializar Stripe (solo si está disponible)
 let stripe = null;
-if (typeof Stripe !== 'undefined') {
+if (typeof Stripe !== 'undefined' && STRIPE_PUBLIC_KEY !== 'pk_test_TUYOO_PUBLIC_KEY_AQUI') {
   stripe = Stripe(STRIPE_PUBLIC_KEY);
 }
 
 // Función de suscripción
 async function subscribe(plan) {
   if (plan === 'free') {
-    // Redirigir a registro
-    window.location.href = '#registro';
+    // Abrir modal de registro
+    openModal();
+    showRegister();
     return;
   }
 
@@ -27,10 +28,16 @@ async function subscribe(plan) {
   const token = localStorage.getItem('token');
   
   if (!token) {
-    // Guardar plan seleccionado y redirigir a registro
+    // Guardar plan seleccionado y abrir modal
     localStorage.setItem('selectedPlan', plan);
-    alert('Primero crea una cuenta gratuita. El plan se aplicará al registrarte.');
-    window.location.href = '#registro';
+    openModal();
+    showRegister();
+    return;
+  }
+
+  // Plan de pago - redirigir a Stripe
+  if (!stripe || STRIPE_PUBLIC_KEY === 'pk_test_TUYOO_PUBLIC_KEY_AQUI') {
+    alert('Stripe no está configurado aún. Pronto podrás contratar el plan.');
     return;
   }
 
@@ -83,6 +90,6 @@ function updateUIForLoggedInUser(user) {
   const headerCTA = document.querySelector('.header .btn-primary');
   if (headerCTA) {
     headerCTA.textContent = 'Mi panel';
-    headerCTA.href = '/dashboard';
+    headerCTA.href = 'dashboard.html';
   }
 }

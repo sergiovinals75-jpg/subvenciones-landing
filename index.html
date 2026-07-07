@@ -256,6 +256,51 @@
     </div>
   </section>
 
+  <!-- Registro/Login Modal -->
+  <div class="modal" id="authModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      
+      <!-- Formulario Login -->
+      <div id="loginForm">
+        <h2>Iniciar sesión</h2>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" required>
+          </div>
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" id="loginPassword" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Iniciar sesión</button>
+        </form>
+        <p class="form-switch">¿No tienes cuenta? <a href="#" onclick="showRegister()">Regístrate gratis</a></p>
+      </div>
+
+      <!-- Formulario Registro -->
+      <div id="registerForm" style="display:none">
+        <h2>Crear cuenta gratis</h2>
+        <form onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="registerEmail" required>
+          </div>
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" id="registerPassword" minlength="6" required>
+          </div>
+          <div class="form-group">
+            <label>Empresa (opcional)</label>
+            <input type="text" id="registerCompany">
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Crear cuenta</button>
+        </form>
+        <p class="form-switch">¿Ya tienes cuenta? <a href="#" onclick="showLogin()">Inicia sesión</a></p>
+      </div>
+    </div>
+  </div>
+
   <!-- CTA Final -->
   <section class="cta-final">
     <div class="container">
