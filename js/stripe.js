@@ -1,7 +1,7 @@
 // Configuración de Stripe
 // IMPORTANTE: Reemplazar con tu public key de Stripe
 const STRIPE_PUBLIC_KEY = 'pk_test_TUYOO_PUBLIC_KEY_AQUI';
-const API_URL = 'http://localhost:3000/api';
+const API_URL = window.location.origin + '/api';
 
 // Inicializar Stripe (solo si está disponible)
 let stripe = null;
