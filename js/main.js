@@ -159,6 +159,23 @@ function updateUIForLoggedInUser(user) {
   }
 }
 
+// Subscribe function (pricing buttons)
+function subscribe(plan) {
+  if (plan === 'free') {
+    openModal();
+    showRegister();
+    return;
+  }
+
+  if (plan === 'empresa') {
+    window.location.href = 'mailto:hola@subvencionesai.com?subject=Interesado%20en%20plan%20Empresa';
+    return;
+  }
+
+  // Plans de pago
+  alert('Stripe no está configurado aún. Pronto podrás contratar el plan.');
+}
+
 // Check if user is logged in on page load
 document.addEventListener('DOMContentLoaded', () => {
   const user = localStorage.getItem('user');
