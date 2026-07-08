@@ -185,14 +185,40 @@
       
       const resultDiv = document.getElementById('agentResult');
       resultDiv.style.display = 'block';
-      resultDiv.textContent = '🔄 Buscando...';
+      resultDiv.textContent = '🔄 Buscando en fuentes reales...';
       
       try {
-        await new Promise(r => setTimeout(r, 1500));
+        const response = await fetch('http://localhost:3001/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: query })
+        });
         
-        resultDiv.textContent = `✅ Simulación de búsqueda: "${query}"\n\n📋 Resultados simulados:\n1. Kit Digital - Hasta 12.000€\n2. ENISA Jóvenes Emprendedores - Hasta 75.000€\n3. CDTI I+D - Subvención a fondo perdido\n4. Fondos FEDER - Digitalización PYME\n\n💡 Cuando conectes la API real, esto devolverá datos reales de +50 fuentes oficiales.`;
+        const data = await response.json();
+        
+        if (!data.success) {
+          throw new Error(data.error || 'Error en búsqueda');
+        }
+        
+        if (data.total === 0) {
+          resultDiv.textContent = `🔍 No se encontraron resultados para: "${query}"\n\nPrueba con términos más genéricos como:\n- "subvenciones digitalización"\n- "kit digital"\n- "ayudas I+D"`;
+          return;
+        }
+        
+        let output = `✅ Encontrados ${data.total} resultados para: "${query}"\n\n`;
+        data.resultados.slice(0, 5).forEach((r, i) => {
+          output += `\n${i+1}. ${r.titulo}`;
+          if (r.descripcion) output += `\n   ${r.descripcion.substring(0, 150)}...`;
+          if (r.plazos && r.plazos.length) output += `\n   📅 Plazos: ${r.plazos.join(', ')}`;
+          if (r.importe && r.importe.length) output += `\n   💰 Importe: ${r.importe.join(', ')}`;
+          if (r.url) output += `\n   🔗 ${r.url}`;
+          output += '\n';
+        });
+        
+        output += `\n💡 Conectando API real con búsqueda web (Playwright + Google)`;
+        resultDiv.textContent = output;
       } catch (e) {
-        resultDiv.textContent = '❌ Error: ' + e.message;
+        resultDiv.textContent = '❌ Error: ' + e.message + '\n\nVerifica que la API esté corriendo en http://localhost:3001';
       }
     }
   </script>
