@@ -21,20 +21,14 @@
     .welcome-box p { opacity: 0.9; }
     .logout-btn { background: none; border: none; color: var(--gray); cursor: pointer; font-size: 0.9rem; text-decoration: underline; }
     .logout-btn:hover { color: var(--dark); }
-    .feature-placeholder { text-align: center; padding: 40px; color: var(--gray); }
-    .feature-placeholder h3 { margin-bottom: 12px; color: var(--dark); }
-    .usage-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 8px 0 16px; }
+    .usage-item { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; }
+    .usage-bar { height: 8px; background: var(--border); border-radius: 4px; flex: 1; margin: 0 16px; overflow: hidden; }
     .usage-fill { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.3s; }
-    .btn-test { background: var(--secondary); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 12px; }
-    .btn-test:hover { background: #059669; }
-    .btn-simular { background: #F59E0B; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 12px; }
-    .btn-simular:hover { background: #D97706; }
-    .plan-info { margin-bottom: 16px; }
-    .plan-info p { margin: 8px 0; color: var(--gray); font-size: 0.9rem; }
-    .agent-test { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 20px; margin-top: 16px; }
-    .agent-test h4 { color: #059669; margin-bottom: 12px; }
-    .agent-test textarea { width: 100%; padding: 12px; border: 1px solid #BBF7D0; border-radius: 8px; font-family: inherit; margin-bottom: 12px; resize: vertical; }
-    .agent-result { background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 16px; margin-top: 12px; white-space: pre-wrap; font-family: monospace; font-size: 0.85rem; display: none; }
+    .usage-text { font-size: 0.9rem; color: var(--gray); min-width: 80px; }
+    .btn-simular { width: 100%; margin: 8px 0; }
+    .agent-test { margin-top: 16px; }
+    .agent-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+    .result-box { background: var(--light); border-radius: 8px; padding: 16px; white-space: pre-wrap; font-family: monospace; font-size: 0.9rem; min-height: 120px; display: none; }
   </style>
 </head>
 <body>
@@ -54,47 +48,50 @@
   <main class="dashboard">
     <div class="welcome-box">
       <h2>Bienvenido, <span id="userName"></span></h2>
-      <p>Estás en el plan <strong id="currentPlanName">Gratis</strong>. <a href="index.html#pricing" style="color: #FDE68A;">Ver planes</a></p>
+      <p>Estás en el plan <strong id="currentPlanName">Gratis</strong>. Próximamente podrás buscar subvenciones con nuestro agente IA.</p>
     </div>
 
     <div class="dashboard-grid">
       <div class="dashboard-card">
         <h2>Mi Plan</h2>
-        <div class="plan-badge plan-free" id="planBadge">Gratis</div>
-        <div class="plan-info" id="planInfo">
-          <p>2 búsquedas / mes</p>
-          <p>1 análisis / mes</p>
-          <p>0 PDFs / mes</p>
+        <div id="planBadge" class="plan-badge plan-free">Gratis</div>
+        <div id="planInfo" style="color: var(--gray); margin-bottom: 16px;">
+          <p>2 búsquedas, 1 análisis, 0 PDFs por mes</p>
         </div>
-        <button class="btn-simular" onclick="simularPago('profesional')">Simular upgrade a Profesional (199€)</button>
-        <button class="btn-simular" onclick="simularPago('basico')" style="background: #2563EB; margin-top: 8px;">Simular upgrade a Básico (49€)</button>
-        <a href="index.html#pricing" class="btn btn-secondary" style="display: block; text-align: center; margin-top: 12px;">Ver todos los planes</a>
-      </div>
-
-      <div class="dashboard-card">
-        <h2>Agente de Subvenciones</h2>
-        <p style="color: var(--gray); margin-bottom: 16px;">Prueba el agente IA buscando subvenciones reales.</p>
-        
-        <div class="agent-test">
-          <h4>🧪 Test del Agente</h4>
-          <textarea id="agentQuery" rows="3" placeholder="Ej: Buscar subvenciones para empresa de tecnología en Madrid"></textarea>
-          <button class="btn-test" onclick="probarAgente()">Probar Agente</button>
-          <div class="agent-result" id="agentResult"></div>
-        </div>
+        <button class="btn btn-simular" onclick="simularPago('free')">Simular Gratis</button>
+        <button class="btn btn-simular btn-primary" onclick="simularPago('basico')">Simular Básico (49€)</button>
+        <button class="btn btn-simular btn-primary" onclick="simularPago('profesional')">Simular Profesional (199€)</button>
+        <button class="btn btn-simular" onclick="simularPago('empresa')">Simular Empresa (599€)</button>
       </div>
 
       <div class="dashboard-card">
         <h2>Uso este mes</h2>
-        <div class="plan-info" id="usageInfo">
-          <p>Búsquedas: <span id="searchesUsed">0</span> / <span id="searchesLimit">2</span></p>
+        <div class="usage-item">
+          <span class="usage-text">Búsquedas</span>
           <div class="usage-bar"><div class="usage-fill" id="searchesBar" style="width: 0%"></div></div>
-          <p>Análisis: <span id="analysesUsed">0</span> / <span id="analysesLimit">1</span></p>
-          <div class="usage-bar"><div class="usage-fill" id="analysesBar" style="width: 0%"></div></div>
-          <p>PDFs: <span id="pdfsUsed">0</span> / <span id="pdfsLimit">0</span></p>
-          <div class="usage-bar"><div class="usage-fill" id="pdfsBar" style="width: 0%"></div></div>
+          <span class="usage-text"><span id="searchesUsed">0</span>/<span id="searchesLimit">2</span></span>
         </div>
-        <button class="btn-test" onclick="usarBusqueda()">+ Usar 1 búsqueda (test)</button>
-        <button class="btn-test" onclick="usarAnalisis()" style="background: #2563EB; margin-top: 8px;">+ Usar 1 análisis (test)</button>
+        <div class="usage-item">
+          <span class="usage-text">Análisis</span>
+          <div class="usage-bar"><div class="usage-fill" id="analysesBar" style="width: 0%"></div></div>
+          <span class="usage-text"><span id="analysesUsed">0</span>/<span id="analysesLimit">1</span></span>
+        </div>
+        <div class="usage-item">
+          <span class="usage-text">PDFs</span>
+          <div class="usage-bar"><div class="usage-fill" id="pdfsBar" style="width: 0%"></div></div>
+          <span class="usage-text"><span id="pdfsUsed">0</span>/<span id="pdfsLimit">0</span></span>
+        </div>
+        <button class="btn btn-secondary" onclick="usarBusqueda()">+ Usar 1 búsqueda</button>
+        <button class="btn btn-secondary" onclick="usarAnalisis()">+ Usar 1 análisis</button>
+      </div>
+
+      <div class="dashboard-card">
+        <h2>Test del Agente IA (Simulación)</h2>
+        <div class="agent-test">
+          <input type="text" id="agentQuery" class="agent-input" placeholder="Ej: subvenciones tecnología Madrid">
+          <button class="btn btn-primary" onclick="probarAgente()">Probar Agente</button>
+        </div>
+        <div id="agentResult" class="result-box"></div>
       </div>
     </div>
   </main>
@@ -114,6 +111,8 @@
     function logout() {
       localStorage.removeItem('user');
       window.location.href = 'index.html';
+    }
+    
     function simularPago(plan) {
       const user = JSON.parse(localStorage.getItem('user'));
       user.plan = plan;
@@ -121,7 +120,7 @@
       actualizarDashboard(user);
       alert('✅ Plan actualizado a ' + plan.charAt(0).toUpperCase() + plan.slice(1) + '!');
     }
-
+    
     function actualizarDashboard(user) {
       const plans = {
         free: { name: 'Gratis', searches: 2, analyses: 1, pdfs: 0, badge: 'plan-free' },
@@ -161,7 +160,7 @@
       document.getElementById('analysesBar').style.width = aPct + '%';
       document.getElementById('pdfsBar').style.width = pPct + '%';
     }
-
+    
     function usarBusqueda() {
       incrementarUso('searches');
     }
@@ -179,7 +178,7 @@
       const user = JSON.parse(localStorage.getItem('user'));
       actualizarDashboard(user);
     }
-
+    
     async function probarAgente() {
       const query = document.getElementById('agentQuery').value;
       if (!query.trim()) return alert('Escribe una búsqueda');
@@ -189,11 +188,9 @@
       resultDiv.textContent = '🔄 Buscando...';
       
       try {
-        // Aquí conectaremos con el agente real cuando tengamos la API
-        // Por ahora simulamos respuesta
         await new Promise(r => setTimeout(r, 1500));
         
-        resultDiv.textContent = `✅ Simulación de búsqueda: "${document.getElementById('agentQuery').value}"\n\n📋 Resultados simulados:\n1. Kit Digital - Hasta 12.000€\n2. ENISA Jóvenes Emprendedores - Hasta 75.000€\n3. CDTI I+D - Subvención a fondo perdido\n4. Fondos FEDER - Digitalización PYME\n\n💡 Cuando conectes la API real, esto devolverá datos reales de +50 fuentes oficiales.`;
+        resultDiv.textContent = `✅ Simulación de búsqueda: "${query}"\n\n📋 Resultados simulados:\n1. Kit Digital - Hasta 12.000€\n2. ENISA Jóvenes Emprendedores - Hasta 75.000€\n3. CDTI I+D - Subvención a fondo perdido\n4. Fondos FEDER - Digitalización PYME\n\n💡 Cuando conectes la API real, esto devolverá datos reales de +50 fuentes oficiales.`;
       } catch (e) {
         resultDiv.textContent = '❌ Error: ' + e.message;
       }
